@@ -16,6 +16,7 @@ public class Pivotal {
         private static final String GCM_SENDER_ID = "pivotal.push.gcmSenderId";
         private static final String PLATFORM_UUID = "pivotal.push.platformUuid";
         private static final String PLATFORM_SECRET = "pivotal.push.platformSecret";
+        private static final String TRUST_ALL_SSL_CERTIFICATES = "pivotal.push.trustAllSslCertificates";
     }
 
     private static final String[] LOCATIONS = {
@@ -66,6 +67,10 @@ public class Pivotal {
         return value;
     }
 
+    /* package */ static String getOptionalProperty(final String key, String defaultValue) {
+        return getProperties().getProperty(key, defaultValue);
+    }
+
     public static String getPlatformUuid() {
         return get(Keys.PLATFORM_UUID);
     }
@@ -80,5 +85,9 @@ public class Pivotal {
 
     public static String getServiceUrl() {
         return get(Keys.SERVICE_URL);
+    }
+
+    public static boolean isTrustAllSslCertificates() {
+        return Boolean.parseBoolean(getOptionalProperty(Keys.TRUST_ALL_SSL_CERTIFICATES, "false"));
     }
 }

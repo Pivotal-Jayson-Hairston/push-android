@@ -58,4 +58,8 @@ public class PivotalTest extends AndroidTestCase {
     public void testGetServiceUrl() {
         assertEquals("http://example.com", Pivotal.getServiceUrl());
     }
+
+    public void testTrustAllSslCertificates() {
+        assertTrue(Pivotal.isTrustAllSslCertificates());
+    }
 }

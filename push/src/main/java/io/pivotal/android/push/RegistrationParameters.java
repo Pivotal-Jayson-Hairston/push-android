@@ -17,6 +17,7 @@ public class RegistrationParameters {
     private final String serviceUrl;
     private final String deviceAlias;
     private final Set<String> tags;
+    private final boolean trustAllSslCertificates;
 
     /**
      * Sets up parameters used by the Pivotal CF Mobile Services Push SDK
@@ -26,18 +27,19 @@ public class RegistrationParameters {
      * @param platformSecret The "platform secret", as defined by Pivotal CF Mobile Services Push Services for your platform.  May not be null or empty.
      * @param serviceUrl     The Pivotal CF Mobile Services server used to provide push and related analytics services.
      * @param deviceAlias    A developer-defined "device alias" which can be used to designate this device, or class.
-     *                       of devices, in push or notification campaigns. May not be set to `null`. May be set to empty.
+*                       of devices, in push or notification campaigns. May not be set to `null`. May be set to empty.
      * @param tags           A set of tags to register to.  You should always register all tags that you want to listen to, even if you have
-     *                       already subscribed to them.  If you exclude any subscribed tags in a registration request, then those tags
-     *                       will be unsubscribed.
+*                       already subscribed to them.  If you exclude any subscribed tags in a registration request, then those tags
+     * @param trustAllSslCertificates  'true' if all SSL certificates should be trusted. You should use 'false' unless otherwise required.
      */
-    public RegistrationParameters(String gcmSenderId, String platformUuid, String platformSecret, String serviceUrl, String deviceAlias, Set<String> tags) {
+    public RegistrationParameters(String gcmSenderId, String platformUuid, String platformSecret, String serviceUrl, String deviceAlias, Set<String> tags, boolean trustAllSslCertificates) {
         this.gcmSenderId = gcmSenderId;
         this.platformUuid = platformUuid;
         this.platformSecret = platformSecret;
         this.serviceUrl = serviceUrl;
         this.deviceAlias = deviceAlias;
         this.tags = tags;
+        this.trustAllSslCertificates = trustAllSslCertificates;
     }
 
     public String getGcmSenderId() {
@@ -64,91 +66,41 @@ public class RegistrationParameters {
         return tags != null ? tags : new HashSet<String>();
     }
 
+    public boolean isTrustAllSslCertificates() {
+        return trustAllSslCertificates;
+    }
+
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        if (o == null) {
-            return false;
-        }
+        RegistrationParameters that = (RegistrationParameters) o;
 
-        if (!(o instanceof RegistrationParameters)) {
+        if (trustAllSslCertificates != that.trustAllSslCertificates) return false;
+        if (gcmSenderId != null ? !gcmSenderId.equals(that.gcmSenderId) : that.gcmSenderId != null)
             return false;
-        }
+        if (platformUuid != null ? !platformUuid.equals(that.platformUuid) : that.platformUuid != null)
+            return false;
+        if (platformSecret != null ? !platformSecret.equals(that.platformSecret) : that.platformSecret != null)
+            return false;
+        if (serviceUrl != null ? !serviceUrl.equals(that.serviceUrl) : that.serviceUrl != null)
+            return false;
+        if (deviceAlias != null ? !deviceAlias.equals(that.deviceAlias) : that.deviceAlias != null)
+            return false;
+        return !(tags != null ? !tags.equals(that.tags) : that.tags != null);
 
-        RegistrationParameters other = (RegistrationParameters)o;
-        
-        if (gcmSenderId == null && other.gcmSenderId != null) {
-            return false;
-        }
-        if (gcmSenderId != null && other.gcmSenderId == null) {
-            return false;
-        }
-        if (gcmSenderId != null && other.gcmSenderId != null && !other.gcmSenderId.equals(gcmSenderId)) {
-            return false;
-        }
-
-        if (platformUuid == null && other.platformUuid != null) {
-            return false;
-        }
-        if (platformUuid != null && other.platformUuid == null) {
-            return false;
-        }
-        if (platformUuid != null && other.platformUuid != null && !other.platformUuid.equals(platformUuid)) {
-            return false;
-        }
-
-        if (platformSecret == null && other.platformSecret != null) {
-            return false;
-        }
-        if (platformSecret != null && other.platformSecret == null) {
-            return false;
-        }
-        if (platformSecret != null && other.platformSecret != null && !other.platformSecret.equals(platformSecret)) {
-            return false;
-        }
-
-        if (serviceUrl == null && other.serviceUrl != null) {
-            return false;
-        }
-        if (serviceUrl != null && other.serviceUrl == null) {
-            return false;
-        }
-        if (serviceUrl != null && other.serviceUrl != null && !other.serviceUrl.equals(serviceUrl)) {
-            return false;
-        }
-
-        if (deviceAlias == null && other.deviceAlias != null) {
-            return false;
-        }
-        if (deviceAlias != null && other.deviceAlias == null) {
-            return false;
-        }
-        if (deviceAlias != null && other.deviceAlias != null && !other.deviceAlias.equals(deviceAlias)) {
-            return false;
-        }
-
-        if (tags == null && other.tags != null) {
-            return false;
-        }
-        if (tags != null && other.tags == null) {
-            return false;
-        }
-        if (tags != null && other.tags != null && !other.tags.equals(tags)) {
-            return false;
-        }
-
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = 17;
-        result = (result * 31) + (gcmSenderId == null ? 0 : gcmSenderId.hashCode());
-        result = (result * 31) + (platformUuid == null ? 0 : platformUuid.hashCode());
-        result = (result * 31) + (platformSecret == null ? 0 : platformSecret.hashCode());
-        result = (result * 31) + (serviceUrl == null ? 0 : serviceUrl.hashCode());
-        result = (result * 31) + (deviceAlias == null ? 0 : deviceAlias.hashCode());
-        result = (result * 31) + (tags == null ? 0 : tags.hashCode());
+        int result = gcmSenderId != null ? gcmSenderId.hashCode() : 0;
+        result = 31 * result + (platformUuid != null ? platformUuid.hashCode() : 0);
+        result = 31 * result + (platformSecret != null ? platformSecret.hashCode() : 0);
+        result = 31 * result + (serviceUrl != null ? serviceUrl.hashCode() : 0);
+        result = 31 * result + (deviceAlias != null ? deviceAlias.hashCode() : 0);
+        result = 31 * result + (tags != null ? tags.hashCode() : 0);
+        result = 31 * result + (trustAllSslCertificates ? 1 : 0);
         return result;
     }
 }

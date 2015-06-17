@@ -150,7 +150,8 @@ public class Push {
         final String platformUuid = Pivotal.getPlatformUuid();
         final String platformSecret = Pivotal.getPlatformSecret();
         final String serviceUrl = Pivotal.getServiceUrl();
-        return new RegistrationParameters(gcmSenderId, platformUuid, platformSecret, serviceUrl, deviceAlias, tags);
+        final boolean trustAllSslCertificates = Pivotal.isTrustAllSslCertificates();
+        return new RegistrationParameters(gcmSenderId, platformUuid, platformSecret, serviceUrl, deviceAlias, tags, trustAllSslCertificates);
     }
 
     private void verifyRegistrationArguments(RegistrationParameters parameters) {
