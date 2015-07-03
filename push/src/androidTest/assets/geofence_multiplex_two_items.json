@@ -1,0 +1,8 @@
+[
+  { "multiplex_id" : "guid1",
+    "request_ids" : [ "PCF_1_2", "PCF_4_2" ]
+  },
+  { "multiplex_id" : "guid2",
+    "request_ids" : [ "PCF_2_1", "PCF_3_1", "PCF_5_1" ]
+  }
+]

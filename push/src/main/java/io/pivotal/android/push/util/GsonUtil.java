@@ -18,9 +18,12 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Date;
+import java.util.Map;
 
 import io.pivotal.android.push.model.geofence.PCFPushGeofenceData;
 import io.pivotal.android.push.model.geofence.PCFPushGeofenceDataList;
+import io.pivotal.android.push.model.geofence.PCFPushGeofenceMultiplex;
+import io.pivotal.android.push.model.geofence.PCFPushGeofenceMultiplexMap;
 
 public class GsonUtil {
 
@@ -35,9 +38,11 @@ public class GsonUtil {
     private static GsonBuilder getBuilder() {
 
         final Type longSparseArrayType = new TypeToken<PCFPushGeofenceDataList>(){}.getType();
+        final Type multiplexMapType = new TypeToken<PCFPushGeofenceMultiplexMap>(){}.getType();
 
         return new GsonBuilder()
                 .registerTypeAdapter(longSparseArrayType, new PCFPushGeofenceDataListTypeAdapter())
+                .registerTypeAdapter(multiplexMapType, new PCFPushGeofenceMultiplexMapTypeAdapter())
                 .registerTypeAdapter(Date.class, dateDeserializer)
                 .registerTypeAdapter(Date.class, dateSerializer);
     }
@@ -109,6 +114,55 @@ public class GsonUtil {
             while (in.peek() != JsonToken.END_ARRAY) {
                 final PCFPushGeofenceData item = gson.fromJson(in, PCFPushGeofenceData.class);
                 final long key = item.getId();
+                result.put(key, item);
+            }
+            in.endArray();
+            return result;
+        }
+    }
+
+    private static class PCFPushGeofenceMultiplexMapTypeAdapter extends TypeAdapter<PCFPushGeofenceMultiplexMap> {
+
+        final Gson gson;
+
+        public PCFPushGeofenceMultiplexMapTypeAdapter() {
+
+            this.gson = new GsonBuilder().create();
+        }
+
+        @Override
+        public void write(JsonWriter out, PCFPushGeofenceMultiplexMap map) throws IOException {
+            if (map == null) {
+                out.nullValue();
+                return;
+            }
+
+            final Type dataType = new TypeToken<PCFPushGeofenceMultiplex>(){}.getType();
+
+            out.beginArray();
+
+            for (Map.Entry<String, PCFPushGeofenceMultiplex> entry : map.entrySet()) {
+                final PCFPushGeofenceMultiplex item = entry.getValue();
+                gson.toJson(gson.toJsonTree(item, dataType), out);
+            }
+
+            out.endArray();
+        }
+
+        @Override
+        public PCFPushGeofenceMultiplexMap read(JsonReader in) throws IOException {
+            if (in.peek() == JsonToken.NULL) {
+                in.nextNull();
+                return null;
+            }
+            if (in.peek() != JsonToken.BEGIN_ARRAY) {
+                throw new IOException("Parsing PCFPushGeofenceMultiplexMap. Expected JsonToken.BEGIN_ARRAY");
+            }
+            final PCFPushGeofenceMultiplexMap result = new PCFPushGeofenceMultiplexMap();
+            in.beginArray();
+            while (in.peek() != JsonToken.END_ARRAY) {
+                final PCFPushGeofenceMultiplex item = gson.fromJson(in, PCFPushGeofenceMultiplex.class);
+                final String key = item.getMultiplexId();
                 result.put(key, item);
             }
             in.endArray();

@@ -23,6 +23,7 @@ import io.pivotal.android.push.model.geofence.PCFPushGeofenceData;
 import io.pivotal.android.push.model.geofence.PCFPushGeofenceDataList;
 import io.pivotal.android.push.model.geofence.PCFPushGeofenceLocation;
 import io.pivotal.android.push.model.geofence.PCFPushGeofenceLocationMap;
+import io.pivotal.android.push.model.geofence.PCFPushGeofenceMultiplexMap;
 import io.pivotal.android.push.service.GcmService;
 import io.pivotal.android.push.util.DebugUtil;
 import io.pivotal.android.push.util.Logger;
@@ -49,8 +50,8 @@ public class GeofenceRegistrar {
         monitorGeofences(emptyGeofencesToRegister, emptySerializableGeofences);
     }
 
-    public void registerGeofences(PCFPushGeofenceLocationMap geofencesToRegister, PCFPushGeofenceDataList geofenceDataList) {
-        if (geofencesToRegister == null || geofenceDataList == null) {
+    public void registerGeofences(PCFPushGeofenceMultiplexMap multiplexMap, PCFPushGeofenceLocationMap geofencesToRegister, PCFPushGeofenceDataList geofenceDataList) {
+        if (multiplexMap == null || geofencesToRegister == null || geofenceDataList == null) {
             return;
         }
 

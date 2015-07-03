@@ -6,6 +6,7 @@ import io.pivotal.android.push.model.geofence.PCFPushGeofenceData;
 import io.pivotal.android.push.model.geofence.PCFPushGeofenceDataList;
 import io.pivotal.android.push.model.geofence.PCFPushGeofenceLocation;
 import io.pivotal.android.push.model.geofence.PCFPushGeofenceLocationMap;
+import io.pivotal.android.push.model.geofence.PCFPushGeofenceMultiplexMap;
 import io.pivotal.android.push.model.geofence.PCFPushGeofenceResponseData;
 import io.pivotal.android.push.util.Logger;
 import io.pivotal.android.push.util.TimeProvider;
@@ -67,20 +68,23 @@ public class GeofenceEngine {
 
         final PCFPushGeofenceDataList geofencesToStore = new PCFPushGeofenceDataList();
         final PCFPushGeofenceLocationMap geofencesToRegister = new PCFPushGeofenceLocationMap();
+        final PCFPushGeofenceMultiplexMap multiplexMap = new PCFPushGeofenceMultiplexMap();
         addValidGeofencesFromStore(geofencesToStore, storedGeofences, responseData);
         addValidGeofencesFromUpdate(geofencesToStore, responseData.getGeofences());
         geofencesToRegister.addAll(geofencesToStore);
-
+        // TODO - populate the multiplex map
         Logger.i("GeofenceEngine: going to register " + geofencesToRegister.size() + " geofences.");
-        registrar.registerGeofences(geofencesToRegister, geofencesToStore);
+        registrar.registerGeofences(multiplexMap, geofencesToRegister, geofencesToStore);
         store.saveRegisteredGeofences(geofencesToStore);
     }
 
     public void reregisterCurrentLocations() {
         final PCFPushGeofenceDataList geofenceDataList = store.getCurrentlyRegisteredGeofences();
         final PCFPushGeofenceLocationMap geofencesToRegister = new PCFPushGeofenceLocationMap();
+        final PCFPushGeofenceMultiplexMap multiplexMap = new PCFPushGeofenceMultiplexMap();
         geofencesToRegister.addAll(geofenceDataList);
-        registrar.registerGeofences(geofencesToRegister, geofenceDataList);
+        // TODO - populate the multiplex map
+        registrar.registerGeofences(multiplexMap, geofencesToRegister, geofenceDataList);
     }
 
     public void clearLocations(final PCFPushGeofenceLocationMap locationsToClear) {
@@ -92,11 +96,14 @@ public class GeofenceEngine {
         final PCFPushGeofenceDataList storedGeofences = store.getCurrentlyRegisteredGeofences();
         final PCFPushGeofenceDataList geofencesToStore = new PCFPushGeofenceDataList();
         final PCFPushGeofenceLocationMap geofencesToRegister = new PCFPushGeofenceLocationMap();
+        final PCFPushGeofenceMultiplexMap multiplexMap = new PCFPushGeofenceMultiplexMap();
+
+        // TODO - populate the multiplex map
 
         filterClearedLocations(locationsToClear, storedGeofences, geofencesToStore, geofencesToRegister);
 
         Logger.i("GeofenceEngine: going to register " + geofencesToRegister.size() + " geofences.");
-        registrar.registerGeofences(geofencesToRegister, geofencesToStore);
+        registrar.registerGeofences(multiplexMap, geofencesToRegister, geofencesToStore);
         store.saveRegisteredGeofences(geofencesToStore);
     }
 
