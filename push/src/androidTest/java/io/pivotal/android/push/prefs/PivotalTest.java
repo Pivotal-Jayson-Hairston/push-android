@@ -72,4 +72,8 @@ public class PivotalTest extends AndroidTestCase {
     public void testTrustAllSslCertificates() {
         assertTrue(Pivotal.isTrustAllSslCertificates(getContext()));
     }
+    
+    public void testAreAnalyticsEnabled() {
+        assertTrue(Pivotal.getAreAnalyticsEnabled(getContext()));
+    }
 }

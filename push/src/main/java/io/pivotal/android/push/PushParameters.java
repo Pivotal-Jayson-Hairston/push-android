@@ -25,6 +25,7 @@ public class PushParameters {
     private final String deviceAlias;
     private final Set<String> tags;
     private final boolean areGeofencesEnabled;
+    private final boolean areAnalyticsEnabled;
     private final boolean trustAllSslCertificates;
     private final List<String> pinnedSslCertificateNames;
 
@@ -45,6 +46,7 @@ public class PushParameters {
 *                       already subscribed to them.  If you exclude any subscribed tags in a registration request, then those tags
 *                       will be unsubscribed.
      * @param areGeofencesEnabled  Are geofences available (see the "pivotal.push.geofencesEnabled" property).
+     * @param areAnalyticsEnabled  Indicates if analytics are available. Default set to true.
      * @param trustAllSslCertificates  'true' if all SSL certificates should be trusted. You should use 'false' unless otherwise required.
      * @param pinnedSslCertificateNames  The list of pinned SSL certificates.  May be null or empty.
      */
@@ -55,6 +57,7 @@ public class PushParameters {
                           @Nullable String deviceAlias,
                           @Nullable Set<String> tags,
                           boolean areGeofencesEnabled,
+                          boolean areAnalyticsEnabled,
                           boolean trustAllSslCertificates,
                           @Nullable List<String> pinnedSslCertificateNames) {
 
@@ -65,6 +68,7 @@ public class PushParameters {
         this.deviceAlias = deviceAlias;
         this.tags = Util.lowercaseTags(tags);
         this.areGeofencesEnabled = areGeofencesEnabled;
+        this.areAnalyticsEnabled = areAnalyticsEnabled;
         this.trustAllSslCertificates = trustAllSslCertificates;
         this.pinnedSslCertificateNames = pinnedSslCertificateNames;
     }
@@ -97,6 +101,8 @@ public class PushParameters {
         return areGeofencesEnabled;
     }
 
+    public boolean areAnalyticsEnabled() { return areAnalyticsEnabled; }
+
     public List<String> getPinnedSslCertificateNames() {
         return pinnedSslCertificateNames != null ? Collections.unmodifiableList(pinnedSslCertificateNames) : null;
     }
@@ -113,6 +119,7 @@ public class PushParameters {
         PushParameters that = (PushParameters) o;
 
         if (areGeofencesEnabled != that.areGeofencesEnabled) return false;
+        if (areAnalyticsEnabled != that.areAnalyticsEnabled) return false;
         if (trustAllSslCertificates != that.trustAllSslCertificates) return false;
         if (gcmSenderId != null ? !gcmSenderId.equals(that.gcmSenderId) : that.gcmSenderId != null)
             return false;
@@ -138,6 +145,7 @@ public class PushParameters {
         result = 31 * result + (deviceAlias != null ? deviceAlias.hashCode() : 0);
         result = 31 * result + (tags != null ? tags.hashCode() : 0);
         result = 31 * result + (areGeofencesEnabled ? 1 : 0);
+        result = 31 * result + (areAnalyticsEnabled ? 1 : 0);
         result = 31 * result + (trustAllSslCertificates ? 1 : 0);
         result = 31 * result + (pinnedSslCertificateNames != null ? pinnedSslCertificateNames.hashCode() : 0);
         return result;
