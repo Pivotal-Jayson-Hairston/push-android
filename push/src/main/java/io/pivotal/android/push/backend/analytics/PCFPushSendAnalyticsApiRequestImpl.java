@@ -13,6 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import io.pivotal.android.push.PushParameters;
 import io.pivotal.android.push.database.AnalyticsEventsStorage;
@@ -165,6 +166,7 @@ public class PCFPushSendAnalyticsApiRequestImpl extends ApiRequestImpl implement
         final boolean areAnalyticsEnabled = Pivotal.getAreAnalyticsEnabled(context);
         final boolean isTrustAllCertificates = Pivotal.isTrustAllSslCertificates(context);
         final List<String> pinnedCertificateNames = Pivotal.getPinnedSslCertificateNames(context);
-        return new PushParameters(gcmSenderId, platformUuid, platformSecret, serviceUrl, null, null, areGeofencesEnabled, areAnalyticsEnabled, isTrustAllCertificates, pinnedCertificateNames);
+        final Map<String, String> requestHeaders = preferencesProvider.getRequestHeaders();
+        return new PushParameters(gcmSenderId, platformUuid, platformSecret, serviceUrl, null, null, areGeofencesEnabled, areAnalyticsEnabled, isTrustAllCertificates, pinnedCertificateNames, requestHeaders);
     }
 }

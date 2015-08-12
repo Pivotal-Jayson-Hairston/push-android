@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import io.pivotal.android.push.util.Util;
@@ -28,6 +29,7 @@ public class PushParameters {
     private final boolean areAnalyticsEnabled;
     private final boolean trustAllSslCertificates;
     private final List<String> pinnedSslCertificateNames;
+    private final Map<String, String> requestHeaders;
 
     /**
      * Sets up parameters used by the Pivotal CF Mobile Services Push SDK
@@ -37,7 +39,7 @@ public class PushParameters {
      * @param platformUuid   The "platform", as defined by Pivotal CF Mobile Services Push Services for your platform.  May not be null or empty.
      *                       See the "pivotal.push.platformUuid" property.
      * @param platformSecret The "platform secret", as defined by Pivotal CF Mobile Services Push Services for your platform.  May not be null or empty.
- *                       See the pivotal.push.platformSecret property.
+*                       See the pivotal.push.platformSecret property.
      * @param serviceUrl     The Pivotal CF Mobile Services server used to provide push and related analytics services.
 *                       See the pivotal.push.serviceUrl" property.
      * @param deviceAlias    A developer-defined "device alias" which can be used to designate this device, or class.
@@ -49,6 +51,7 @@ public class PushParameters {
      * @param areAnalyticsEnabled  Indicates if analytics are available. Default set to true.
      * @param trustAllSslCertificates  'true' if all SSL certificates should be trusted. You should use 'false' unless otherwise required.
      * @param pinnedSslCertificateNames  The list of pinned SSL certificates.  May be null or empty.
+     * @param requestHeaders  The list of extra request headers to inject into the request
      */
     public PushParameters(@NonNull String gcmSenderId,
                           @NonNull String platformUuid,
@@ -59,7 +62,8 @@ public class PushParameters {
                           boolean areGeofencesEnabled,
                           boolean areAnalyticsEnabled,
                           boolean trustAllSslCertificates,
-                          @Nullable List<String> pinnedSslCertificateNames) {
+                          @Nullable List<String> pinnedSslCertificateNames,
+                          @Nullable Map<String, String> requestHeaders) {
 
         this.gcmSenderId = gcmSenderId;
         this.platformUuid = platformUuid;
@@ -71,6 +75,7 @@ public class PushParameters {
         this.areAnalyticsEnabled = areAnalyticsEnabled;
         this.trustAllSslCertificates = trustAllSslCertificates;
         this.pinnedSslCertificateNames = pinnedSslCertificateNames;
+        this.requestHeaders = requestHeaders;
     }
 
     public String getGcmSenderId() {
@@ -111,6 +116,10 @@ public class PushParameters {
         return trustAllSslCertificates;
     }
 
+    public Map<String, String> getRequestHeaders() {
+        return requestHeaders;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -132,7 +141,9 @@ public class PushParameters {
         if (deviceAlias != null ? !deviceAlias.equals(that.deviceAlias) : that.deviceAlias != null)
             return false;
         if (tags != null ? !tags.equals(that.tags) : that.tags != null) return false;
-        return !(pinnedSslCertificateNames != null ? !pinnedSslCertificateNames.equals(that.pinnedSslCertificateNames) : that.pinnedSslCertificateNames != null);
+        if (pinnedSslCertificateNames != null ? !pinnedSslCertificateNames.equals(that.pinnedSslCertificateNames) : that.pinnedSslCertificateNames != null)
+            return false;
+        return !(requestHeaders != null ? !requestHeaders.equals(that.requestHeaders) : that.requestHeaders != null);
 
     }
 
@@ -148,6 +159,7 @@ public class PushParameters {
         result = 31 * result + (areAnalyticsEnabled ? 1 : 0);
         result = 31 * result + (trustAllSslCertificates ? 1 : 0);
         result = 31 * result + (pinnedSslCertificateNames != null ? pinnedSslCertificateNames.hashCode() : 0);
+        result = 31 * result + (requestHeaders != null ? requestHeaders.hashCode() : 0);
         return result;
     }
 }

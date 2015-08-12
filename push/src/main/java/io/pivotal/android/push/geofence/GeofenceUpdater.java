@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import io.pivotal.android.push.PushParameters;
@@ -138,8 +139,9 @@ public class GeofenceUpdater {
         final String serviceUrl = Pivotal.getServiceUrl(context);
         final boolean areGeofencesEnabled = pushPreferencesProvider.areGeofencesEnabled();
         final boolean areAnalyticsEnabled = Pivotal.getAreAnalyticsEnabled(context);
-        final boolean isTrustAllCertificates = Pivotal.isTrustAllSslCertificates(context);
+        final boolean trustAllSslCertificates = Pivotal.isTrustAllSslCertificates(context);
         final List<String> pinnedCertificateNames = Pivotal.getPinnedSslCertificateNames(context);
-        return new PushParameters(gcmSenderId, platformUuid, platformSecret, serviceUrl, null, null, areGeofencesEnabled, areAnalyticsEnabled, isTrustAllCertificates, pinnedCertificateNames);
+        final Map<String, String> requestHeaders = pushPreferencesProvider.getRequestHeaders();
+        return new PushParameters(gcmSenderId, platformUuid, platformSecret, serviceUrl, null, null, areGeofencesEnabled, areAnalyticsEnabled, trustAllSslCertificates, pinnedCertificateNames, requestHeaders);
     }
 }
