@@ -139,9 +139,9 @@ public class GeofenceUpdater {
         final String serviceUrl = Pivotal.getServiceUrl(context);
         final boolean areGeofencesEnabled = pushPreferencesProvider.areGeofencesEnabled();
         final boolean areAnalyticsEnabled = Pivotal.getAreAnalyticsEnabled(context);
-        final boolean trustAllSslCertificates = Pivotal.isTrustAllSslCertificates(context);
         final List<String> pinnedCertificateNames = Pivotal.getPinnedSslCertificateNames(context);
         final Map<String, String> requestHeaders = pushPreferencesProvider.getRequestHeaders();
-        return new PushParameters(gcmSenderId, platformUuid, platformSecret, serviceUrl, null, null, areGeofencesEnabled, areAnalyticsEnabled, trustAllSslCertificates, pinnedCertificateNames, requestHeaders);
+        final Pivotal.SslCertValidationMode sslCertValidationMode = Pivotal.getSslCertValidationMode(context);
+        return new PushParameters(gcmSenderId, platformUuid, platformSecret, serviceUrl, null, null, areGeofencesEnabled, areAnalyticsEnabled, sslCertValidationMode, pinnedCertificateNames, requestHeaders);
     }
 }

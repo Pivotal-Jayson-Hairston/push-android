@@ -214,7 +214,8 @@ public class Push {
         final String serviceUrl = Pivotal.getServiceUrl(context);
         final List<String> pinnedCertificateNames = Pivotal.getPinnedSslCertificateNames(context);
         final boolean areAnalyticsEnabled = Pivotal.getAreAnalyticsEnabled(context);
-        return new PushParameters(gcmSenderId, platformUuid, platformSecret, serviceUrl, deviceAlias, tags, areGeofencesEnabled, areAnalyticsEnabled, false, pinnedCertificateNames, requestHeaders);
+        final Pivotal.SslCertValidationMode sslCertValidationMode = Pivotal.getSslCertValidationMode(context);
+        return new PushParameters(gcmSenderId, platformUuid, platformSecret, serviceUrl, deviceAlias, tags, areGeofencesEnabled, areAnalyticsEnabled, sslCertValidationMode, pinnedCertificateNames, requestHeaders);
     }
 
     private void verifyRegistrationArguments(@NonNull PushParameters parameters) {
@@ -431,7 +432,7 @@ public class Push {
      * @param requestHeaders  A Map object with pairs of String headers and String values that will be injected into
      *                        any network requests made by the Push SDK.
      */
-    public void setRequestHeaders(Map<String, String> requestHeaders) {
+    public void setRequestHeaders(@Nullable Map<String, String> requestHeaders) {
         final PushPreferencesProviderImpl preferences = new PushPreferencesProviderImpl(context);
         preferences.setRequestHeaders(requestHeaders);
     }

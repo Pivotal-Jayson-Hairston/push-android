@@ -164,9 +164,9 @@ public class PCFPushSendAnalyticsApiRequestImpl extends ApiRequestImpl implement
         final String serviceUrl = Pivotal.getServiceUrl(context);
         final boolean areGeofencesEnabled = preferencesProvider.areGeofencesEnabled();
         final boolean areAnalyticsEnabled = Pivotal.getAreAnalyticsEnabled(context);
-        final boolean isTrustAllCertificates = Pivotal.isTrustAllSslCertificates(context);
         final List<String> pinnedCertificateNames = Pivotal.getPinnedSslCertificateNames(context);
         final Map<String, String> requestHeaders = preferencesProvider.getRequestHeaders();
-        return new PushParameters(gcmSenderId, platformUuid, platformSecret, serviceUrl, null, null, areGeofencesEnabled, areAnalyticsEnabled, isTrustAllCertificates, pinnedCertificateNames, requestHeaders);
+        final Pivotal.SslCertValidationMode sslCertValidationMode = Pivotal.getSslCertValidationMode(context);
+        return new PushParameters(gcmSenderId, platformUuid, platformSecret, serviceUrl, null, null, areGeofencesEnabled, areAnalyticsEnabled, sslCertValidationMode, pinnedCertificateNames, requestHeaders);
     }
 }
